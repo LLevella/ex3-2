@@ -1,6 +1,6 @@
 import requests
 
-def translate_it(text):
+def translate_it(text, pathin, pathout, langin, langout="ru"):
     """
     YANDEX translation plugin
     docs: https://tech.yandex.ru/translate/doc/dg/reference/translate-docpage/
@@ -19,7 +19,7 @@ def translate_it(text):
 
     params = {
         'key': key,
-        'lang': 'ru-en',
+        'lang': '-'.join(langin, langout),
         'text': text,
     }
     response = requests.get(url, params=params).json()
