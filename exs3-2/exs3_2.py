@@ -20,8 +20,6 @@ def translate_it(text, langin, langout="ru"):
     url = 'https://translate.yandex.net/api/v1.5/tr.json/translate'
     key = 'trnsl.1.1.20180711T201048Z.729c908ff0f01f96.93d39a53eaedeedb9d1b0179d0aa2d67425cc432'
 
-    if not langin:
-        langin = 'en'
     langs = [langout, langin]
 
     params = {
@@ -30,8 +28,9 @@ def translate_it(text, langin, langout="ru"):
         'text': text,
     }
 
-    response = requests.get(url, params=params).json()
-    return ' '.join(response.get('text', []))
+    r = requests.get(url, params=params).json()
+    # print(r.json())
+    return ' '.join(r.get('text', []))
 
 
 def main():
@@ -39,20 +38,22 @@ def main():
     input_files = ['DE.txt','ES.txt','FR.txt']
     output_files = ['DE-OUT.txt','ES-OUT.txt','FR-OUT.txt']
     langs = ['de','es','fr']
-    langin = None
+    langin = ''
     langout = 'ru'
 
     if len(sys.argv) > 2:
         if sys.argv[1].lower() =='-l':
-            langin = sys.argv[2]
-            if  len(sys.argv) > 3:
+            langin += sys.argv[2]
+            if len(sys.argv) > 3:
                 langout = sys.argv[3]
 
+
     for ifiles, ofiles, ilang in zip(input_files, output_files, langs):
+        print(ifiles, ofiles, ilang)
         textin = myfunclib.input_text_data(ifiles)
-        if langin is None:
-            langin = ilang
-        textout = translate_it(textin, langin, langout)
+        print(textin)
+        if len(langin) < 2:
+            textout = translate_it(textin, ilang, langout)
         print(textout)
         myfunclib.output_text_data(ofiles,textout)
 
