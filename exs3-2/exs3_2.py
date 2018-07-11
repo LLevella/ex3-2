@@ -1,6 +1,6 @@
 import requests
 
-def translate_it(text, pathin, pathout, langin, langout="ru"):
+def translate_it(text, pathin='', pathout='', langin='', langout="ru"):
     """
     YANDEX translation plugin
     docs: https://tech.yandex.ru/translate/doc/dg/reference/translate-docpage/
@@ -17,9 +17,13 @@ def translate_it(text, pathin, pathout, langin, langout="ru"):
     url = 'https://translate.yandex.net/api/v1.5/tr.json/translate'
     key = 'trnsl.1.1.20161025T233221Z.47834a66fd7895d0.a95fd4bfde5c1794fa433453956bd261eae80152'
 
+    if not langin:
+        langin = 'en'
+    langs = [langin, langout]
+
     params = {
         'key': key,
-        'lang': '-'.join(langin, langout),
+        'lang': '-'.join(langs),
         'text': text,
     }
     response = requests.get(url, params=params).json()
