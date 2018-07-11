@@ -1,6 +1,9 @@
 import requests
+import sys
 
-def translate_it(text, pathin='', pathout='', langin='', langout="ru"):
+import myfunclib
+
+def translate_it(text, langin, langout="ru"):
     """
     YANDEX translation plugin
     docs: https://tech.yandex.ru/translate/doc/dg/reference/translate-docpage/
@@ -15,19 +18,43 @@ def translate_it(text, pathin='', pathout='', langin='', langout="ru"):
     :return: <str> translated text.
     """
     url = 'https://translate.yandex.net/api/v1.5/tr.json/translate'
-    key = 'trnsl.1.1.20161025T233221Z.47834a66fd7895d0.a95fd4bfde5c1794fa433453956bd261eae80152'
+    key = 'trnsl.1.1.20180711T201048Z.729c908ff0f01f96.93d39a53eaedeedb9d1b0179d0aa2d67425cc432'
 
     if not langin:
         langin = 'en'
-    langs = [langin, langout]
+    langs = [langout, langin]
 
     params = {
         'key': key,
         'lang': '-'.join(langs),
         'text': text,
     }
+
     response = requests.get(url, params=params).json()
     return ' '.join(response.get('text', []))
 
-a = translate_it('Привет')
-print(a)
+
+def main():
+
+    input_files = ['DE.txt','ES.txt','FR.txt']
+    output_files = ['DE-OUT.txt','ES-OUT.txt','FR-OUT.txt']
+    langs = ['de','es','fr']
+    langin = None
+    langout = 'ru'
+
+    if len(sys.argv) > 2:
+        if sys.argv[1].lower() =='-l':
+            langin = sys.argv[2]
+            if  len(sys.argv) > 3:
+                langout = sys.argv[3]
+
+    for ifiles, ofiles, ilang in zip(input_files, output_files, langs):
+        textin = myfunclib.input_text_data(ifiles)
+        if langin is None:
+            langin = ilang
+        textout = translate_it(textin, langin, langout)
+        print(textout)
+        myfunclib.output_text_data(ofiles,textout)
+
+
+main()
