@@ -1,6 +1,5 @@
 import requests
 import sys
-
 import myfunclib
 
 def translate_it(text, langin, langout="ru"):
