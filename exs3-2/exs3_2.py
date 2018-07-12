@@ -20,16 +20,14 @@ def translate_it(text, langin, langout="ru"):
     url = 'https://translate.yandex.net/api/v1.5/tr.json/translate'
     key = 'trnsl.1.1.20180711T201048Z.729c908ff0f01f96.93d39a53eaedeedb9d1b0179d0aa2d67425cc432'
 
-    langs = [langout, langin]
+    langs = [langin, langout]
 
     params = {
         'key': key,
         'lang': '-'.join(langs),
         'text': text,
     }
-
     r = requests.get(url, params=params).json()
-    # print(r.json())
     return ' '.join(r.get('text', []))
 
 
@@ -49,12 +47,9 @@ def main():
 
 
     for ifiles, ofiles, ilang in zip(input_files, output_files, langs):
-        print(ifiles, ofiles, ilang)
         textin = myfunclib.input_text_data(ifiles)
-        print(textin)
         if len(langin) < 2:
             textout = translate_it(textin, ilang, langout)
-        print(textout)
         myfunclib.output_text_data(ofiles,textout)
 
 
